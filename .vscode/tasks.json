@@ -1,0 +1,154 @@
+{
+    "version": "2.0.0",
+    "inputs": [
+        {
+            "id": "name",
+            "description": "Name:",
+            "default": "",
+            "type": "promptString"
+        }
+    ],
+
+    "tasks": [
+
+        // DEFAULT .NET TASKS
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/HomeApp.Server/HomeApp.Server.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/HomeApp.Server/HomeApp.Server.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "windows": {
+                "command": "$Env:${config:db_connection_string.key}='${config:db_connection_string.value}';dotnet watch run --project ${workspaceFolder}/HomeApp.Server/HomeApp.Server.csproj",
+            },
+            "type": "shell",
+            "problemMatcher": "$msCompile",
+            "dependsOn": [
+                "start-postgres"
+            ]
+        },
+
+        // EF MIGRATION TASKS
+
+        {
+            "label": "migration add",
+            "windows": {
+                "command": [
+                    "cd HomeApp.Persistence;",
+                    "$Env:${config:db_connection_string.key}='${config:db_connection_string.value}';",
+                    "dotnet ef --startup-project '../HomeApp.Server/'  migrations add '${input:name}';",
+                    "cd ..;"
+                ]
+            },
+            "type": "shell",
+            "problemMatcher": []
+        },
+        {
+            "label": "migration remove last",
+            "windows": {
+                "command": [
+                    "cd HomeApp.Persistence;",
+                    "$Env:${config:db_connection_string.key}='${config:db_connection_string.value}';",
+                    "dotnet ef --startup-project '../HomeApp.Server/'  migrations remove;",
+                    "cd ..;"
+                ]
+            },
+            "type": "shell",
+            "problemMatcher": []
+        },
+        {
+            "label": "migration db update latest",
+            "windows": {
+                "command": [
+                    "cd HomeApp.Persistence;",
+                    "$Env:${config:db_connection_string.key}='${config:db_connection_string.value}';",
+                    "dotnet ef --startup-project '../HomeApp.Server/'  database update;",
+                    "cd ..;"
+                ]
+            },
+            "type": "shell",
+            "problemMatcher": []
+        },
+
+
+        // DOCKER TASKS
+
+
+        {
+            "label": "docker build/publish amd64",
+            "command": "docker build -f .\\Dockerfile . -t ${config:registry}:amd64;docker push ${config:registry}:amd64",
+            "type": "shell",
+            "problemMatcher": []
+        },
+        {
+            "label": "docker build/publish arm32",
+            "command": "docker build -f .\\Dockerfile.debian-arm32 . -t ${config:registry}:arm32;docker push ${config:registry}:arm32",
+            "type": "shell",
+            "problemMatcher": []
+        },
+        {
+            "label": "docker manifest create/publish",
+            "command": "docker manifest create ${config:registry}:latest -a ${config:registry}:arm32 -a ${config:registry}:amd64; docker manifest push ${config:registry}:latest",
+            "type": "shell",
+            "problemMatcher": []
+        },
+        {
+            "label": "docker publish",
+            "type": "shell",
+            "dependsOn": [
+                "docker build/publish arm32",
+                "docker build/publish amd64",
+                "docker manifest create/publish"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": []
+        },
+
+
+        //DATABASE IMAGE STARTUP TASKS
+
+
+        {
+            "label": "start-mssql",
+            "linux": {
+                "command": "insert linux command here if required"
+            },
+            "windows": {
+                "command": "$(docker start sqlserver) -or $(docker run --name sqlserver -d -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=vkPRnl42k5H4' -e 'MSSQL_PID=Express' -p 1433:1433 mcr.microsoft.com/mssql/server:2019-latest | Out-Host;$?)"
+            },
+            "type": "shell",
+            "problemMatcher": []
+        },
+        {
+            "label": "start-postgres",
+            "linux": {
+                "command": "insert linux command here if required"
+            },
+            "windows": {
+                "command": "$(docker start postgres) -or $(docker run --name postgres -p 5432:5432 -e POSTGRES_DB=homeapp -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -d postgres | Out-Host;$?)"
+            },
+            "type": "shell",
+            "problemMatcher": []
+        }
+    ]
+}

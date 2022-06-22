@@ -1,0 +1,34 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch",
+            "type": "DotNetWatch",
+            "request": "launch",
+            "project": "HomeApp.Server/HomeApp.Server.csproj",
+            "env": {
+                "${config:db_connection_string.key}": "${config:db_connection_string.value}",
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "preLaunchTask": "build"
+        },
+        {
+            "name": ".NET Core Launch (web)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/HomeApp.Server/bin/Debug/net6.0/HomeApp.Server.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/HomeApp.Server",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "${config:db_connection_string.key}": "${config:db_connection_string.value}"
+            }
+        },
+    ]
+}

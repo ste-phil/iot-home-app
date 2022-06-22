@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HomeApp.Server</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HomeApp.Server.styles.css" asp-append-version="true" />
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</head>
+<body>
+    <header class="container" style="margin: 0px; padding: 0px">
+        <nav>
+            <ul>
+                <li><strong>HomeApp</strong></li>
+            </ul>
+            @* <ul>
+                <li><a role="button" asp-area="" asp-page="/Index">Index</a></li>
+                <li><a role="button" asp-area="" asp-page="/Privacy">Privacy</a></li>
+            </ul> *@
+        </nav>
+    </header>
+
+    <main role="main" class="container">
+        @RenderBody()
+    </main>
+
+    @* <footer>
+        <div>
+            &copy; 2022 - HomeApp.Server - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer> *@
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/plotly/plotly-2.12.1.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

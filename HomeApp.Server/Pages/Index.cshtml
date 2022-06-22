@@ -1,0 +1,84 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+
+<div>
+    @foreach (var item in Model.repo.Rooms.Get())
+    {
+        <article>
+            <header style="display: flex; flex-direction: row; justify-content: space-between;">
+                <p>@item.Name</p>
+                <a href="#" onclick="OnClickDebug(event, '@item.Id')" type="button" role="button" class="outline secondary" >🪲</a>
+            </header>
+            <p>🌡️ 10 °C</p>
+
+            <canvas class="background-chart" id="@item.Id" data="@Model.GetTempsJsonArray(item)"></canvas>
+        </article>
+
+        @* @foreach (var temp in Model.GetTemps(item))
+        {
+            <p>@temp.Value</p>   
+        } *@
+    }
+</div>
+
+<script>
+    function OnClickDebug(event, itemId) {
+        event.preventDefault()      //used to prevent jump from <a> tag
+
+        if (event.srcElement.innerText != itemId + " 🪲")
+            event.srcElement.innerText = itemId + " 🪲"
+        else
+            event.srcElement.innerText = "🪲"
+        console.log("asd")
+    }
+
+    function initBackgroundCharts() {
+        let elems = document.getElementsByClassName("background-chart");
+
+        for (let i = 0; i < elems.length; i++) {
+            var data = elems[i].getAttribute("data");
+
+            plotLineChartDatasets(elems[i], [
+                {
+                    label: "Temperatures",
+                    data: [{
+                        x: "2014-09-01",
+                        y: 96,
+                        id: "1B"
+                        }, {
+                        x: "2014-10-04",
+                        y: 95.8,
+                        id: "2B"
+                        }, {
+                        x: "2014-11-06",
+                        y: 99,
+                        id: "3B"
+                    }]
+                },
+                {
+                    label: "Humidity",
+                    data: [{
+                        x: "2014-09-01",
+                        y: 102,
+                        id: "1B"
+                        }, {
+                        x: "2014-10-05",
+                        y: 103.8,
+                        id: "2B"
+                        }, {
+                        x: "2014-11-06",
+                        y: 99.4,
+                        id: "3B"
+                    }]
+                }
+            ])
+        }
+    }
+
+    initBackgroundCharts()
+</script>

@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=homeapp
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    volumes: 
+      - db:/var/lib/postgresql/data
+
+  homeapp:
+    image: ste5phil/homeapp
+    build:
+      context: .
+      dockerfile: HomeApp/Dockerfile
+    environment:
+      - ConnectionStrings__AppDbContext=Host=db;Database=homeapp;Username=postgres;Password=postgres;
+    ports:
+      - 80:80
+      - 443:443
+volumes:
+  db:

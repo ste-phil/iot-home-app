@@ -1,0 +1,23 @@
+# https://hub.docker.com/_/microsoft-dotnet
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+# copy csproj and restore as distinct layers
+COPY ["HomeApp.Server/HomeApp.Server.csproj", "HomeApp.Server/"]
+COPY ["HomeApp.Persistence/HomeApp.Persistence.csproj", "HomeApp.Persistence/"]
+COPY ["HomeApp.Library/HomeApp.Library.csproj", "HomeApp.Library/"]
+RUN dotnet restore -r linux-arm "HomeApp.Server/HomeApp.Server.csproj"
+
+COPY . .
+WORKDIR "/app/HomeApp.Server"
+
+# copy and publish app and libraries (publishes to workingdir/publish)
+RUN dotnet publish "HomeApp.Server.csproj" -c release -o ../publish -r linux-arm --self-contained false --no-restore
+
+# final stage/image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-bullseye-slim-arm32v7
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "HomeApp.Server.dll"]
