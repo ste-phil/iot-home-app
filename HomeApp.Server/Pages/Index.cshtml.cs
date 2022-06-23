@@ -21,4 +21,12 @@ public class IndexModel : PageModel
     public string GetTempsJsonArray(Room r) {
         return JsonSerializer.Serialize(r.TemperatureLevels.Select(x => x.ToDto()).ToList());
     }
+
+    public string GetRoomDataJson(Room r) {
+        return JsonSerializer.Serialize(new {
+            Temperature = repo.TemperatureLevels.Get(x => x.RoomId == r.Id).Select(x => new { x = x.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"), y = x.Value}).ToList(),
+            Co2 = repo.Co2Levels.Get(x => x.RoomId == r.Id).Select(x => new { x = x.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"), y = x.Value}).ToList(),
+            Humidity = repo.HumidityLevels.Get(x => x.RoomId == r.Id).Select(x => new { x = x.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"), y = x.Value}).ToList(),
+        });
+    }
 }

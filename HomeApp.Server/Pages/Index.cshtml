@@ -4,7 +4,6 @@
     ViewData["Title"] = "Home page";
 }
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
 
 <div>
     @foreach (var item in Model.repo.Rooms.Get())
@@ -16,13 +15,8 @@
             </header>
             <p>🌡️ 10 °C</p>
 
-            <canvas class="background-chart" id="@item.Id" data="@Model.GetTempsJsonArray(item)"></canvas>
+            <canvas class="background-chart" id="@item.Id" data="@Model.GetRoomDataJson(item)"></canvas>
         </article>
-
-        @* @foreach (var temp in Model.GetTemps(item))
-        {
-            <p>@temp.Value</p>   
-        } *@
     }
 </div>
 
@@ -40,43 +34,35 @@
     function initBackgroundCharts() {
         let elems = document.getElementsByClassName("background-chart");
 
-        for (let i = 0; i < elems.length; i++) {
-            var data = elems[i].getAttribute("data");
+        let options = {
+            @* scales: {
+                x: {
+                    type: 'time',
+                    @* time: {
+                        parser: "yyyy-MM-dd'T'HH:mm:ss",
+                        unit: 'day',
+                        displayFormats: {
+                            'day': 'MM/dd/yyyy'
+                        }
+                    }
+                } 
+            } *@
+        }
 
-            plotLineChartDatasets(elems[i], [
-                {
-                    label: "Temperatures",
-                    data: [{
-                        x: "2014-09-01",
-                        y: 96,
-                        id: "1B"
-                        }, {
-                        x: "2014-10-04",
-                        y: 95.8,
-                        id: "2B"
-                        }, {
-                        x: "2014-11-06",
-                        y: 99,
-                        id: "3B"
-                    }]
-                },
-                {
-                    label: "Humidity",
-                    data: [{
-                        x: "2014-09-01",
-                        y: 102,
-                        id: "1B"
-                        }, {
-                        x: "2014-10-05",
-                        y: 103.8,
-                        id: "2B"
-                        }, {
-                        x: "2014-11-06",
-                        y: 99.4,
-                        id: "3B"
-                    }]
-                }
-            ])
+
+        for (let i = 0; i < elems.length; i++) {
+            let dataString = elems[i].getAttribute("data");
+            let roomData = JSON.parse(dataString);
+
+            let keys = Object.keys(roomData);
+            let dataset = keys.map(key => {
+                return {
+                    label: key,
+                    data: roomData[key]
+                };
+            })
+            
+            plotLineChartDatasets(elems[i], dataset)
         }
     }
 

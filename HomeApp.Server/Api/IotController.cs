@@ -29,7 +29,7 @@ namespace HomeApp.Controllers
         }
 
         [HttpPost]
-        public void Create([FromBody] ReceiveData data)
+        public void Publish([FromBody] ReceiveData data)
         {
             var now = DateTime.Now;
             now = now.AddTicks(-(now.Ticks % TimeSpan.TicksPerSecond)); //remove ms and s from time
