@@ -12,17 +12,14 @@ namespace HomeApp.Persistence
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Room> Rooms { get; set; }
-        public DbSet<Temperature> Temperatures { get; set; }
-        public DbSet<Humidity> Humidities { get; set; }
-        public DbSet<Co2> Co2s { get; set; }
-        public DbSet<Battery> Batteries { get; set; }
+        public DbSet<DataPoint> DataPoints { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DataPoint>()
-                .Property("Discriminator");
-
+                .HasKey(x => new { x.Id, x.RoomId, x.Type });
 
             base.OnModelCreating(modelBuilder);
         }

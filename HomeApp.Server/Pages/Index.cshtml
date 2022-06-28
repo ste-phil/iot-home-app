@@ -28,25 +28,25 @@
             event.srcElement.innerText = itemId + " 🪲"
         else
             event.srcElement.innerText = "🪲"
-        console.log("asd")
     }
 
     function initBackgroundCharts() {
         let elems = document.getElementsByClassName("background-chart");
 
         let options = {
-            @* scales: {
+            scales: {
                 x: {
                     type: 'time',
-                    @* time: {
-                        parser: "yyyy-MM-dd'T'HH:mm:ss",
-                        unit: 'day',
+                    time: {
+                        parser: "yyyy-MM-dd HH:mm:ss",
+                        unit: 'hour',
                         displayFormats: {
-                            'day': 'MM/dd/yyyy'
+                            hour: 'HH:mm',
+                            day: 'dd'
                         }
                     }
                 } 
-            } *@
+            }
         }
 
 
@@ -62,7 +62,7 @@
                 };
             })
             
-            plotLineChartDatasets(elems[i], dataset)
+            plotLineChartDatasets(elems[i], dataset, options)
         }
     }
 

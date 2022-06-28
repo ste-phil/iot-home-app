@@ -10,10 +10,7 @@ namespace HomeApp.Library.Entities
         public string Id { get; set; }
         public string Name { get; set; }
 
-        public virtual IList<Temperature> TemperatureLevels { get; set; }
-        public virtual IList<Co2> Co2Levels { get; set; }
-        public virtual IList<Humidity> HumidityLevels { get; set; }
-        public virtual IList<Battery> BatteryLevels { get; set; }
+        public virtual IList<DataPoint> DataPoints { get; set; }
     }
 
     public class RoomDto

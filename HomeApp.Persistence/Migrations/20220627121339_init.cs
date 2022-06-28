@@ -25,14 +25,14 @@ namespace HomeApp.Persistence.Migrations
                 name: "DataPoint",
                 columns: table => new
                 {
-                    Id = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Id = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     RoomId = table.Column<string>(type: "text", nullable: false),
-                    Value = table.Column<float>(type: "real", nullable: false),
-                    Discriminator = table.Column<string>(type: "text", nullable: false)
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    Value = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DataPoint", x => new {x.Id, x.RoomId });
+                    table.PrimaryKey("PK_DataPoint", x => new { x.Id, x.RoomId, x.Type });
                     table.ForeignKey(
                         name: "FK_DataPoint_Rooms_RoomId",
                         column: x => x.RoomId,
@@ -45,11 +45,6 @@ namespace HomeApp.Persistence.Migrations
                 name: "IX_DataPoint_RoomId",
                 table: "DataPoint",
                 column: "RoomId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DataPoint_Discriminator",
-                table: "DataPoint",
-                column: "Discriminator");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

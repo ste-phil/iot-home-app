@@ -15,11 +15,13 @@ services:
 
   homeapp:
     image: ste5phil/homeapp
+    restart: always
     build:
       context: .
       dockerfile: HomeApp/Dockerfile
     environment:
       - ConnectionStrings__AppDbContext=Host=db;Database=homeapp;Username=postgres;Password=postgres;
+      - ASPNETCORE_URLS=https://+:443;http://+:80
     ports:
       - 80:80
       - 443:443

@@ -5,14 +5,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeApp.Library.Entities
 {
-    public abstract class DataPoint
+    public enum DataPointType {
+        Battery, Co2, Humidity, Temperature
+    } 
+    
+    public class DataPoint
     {
+        [Key]
         public DateTime Id { get; set; }
         public string RoomId { get; set; }
-        
+        public DataPointType Type { get; set; }
+
         public virtual Room Room { get; set; }
         public float Value { get; set; }
 
+        [NotMapped]
         public DateTime Timestamp => Id;
     }
 
@@ -20,6 +27,8 @@ namespace HomeApp.Library.Entities
     {
         public DateTime Id { get; set; }
         public string RoomId { get; set; }
+        public DataPointType Type { get; set; }
+
         public float Value { get; set; }
     }
 
@@ -30,6 +39,7 @@ namespace HomeApp.Library.Entities
             return new DataPointDto {
                 Id = x.Id,
                 RoomId = x.RoomId,
+                Type = x.Type,
                 Value = x.Value
             };
         }

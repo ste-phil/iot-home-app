@@ -3,5 +3,8 @@
     "db_connection_string": {
         "key": "ConnectionStrings__AppDbContext",
         "value": "Host=127.0.0.1;Database=homeapp;Username=postgres;Password=postgres"
+    },
+    "files.associations": {
+        "cstddef": "cpp"
     } //shortcut for copying to pwsh $Env:ConnectionStrings__AppDbContext = "Host=127.0.0.1;Database=homeapp;Username=postgres;Password=postgres"
 }

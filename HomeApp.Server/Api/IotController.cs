@@ -20,53 +20,63 @@ namespace HomeApp.Controllers
         }
 
         private readonly IRepositoryService repo;
-        private readonly ILogger logger;
 
-        public IotController(ILogger logger, IRepositoryService repo)
+        public IotController(IRepositoryService repo)
         {
             this.repo = repo;
-            this.logger = logger;
         }
 
         [HttpPost]
         public void Publish([FromBody] ReceiveData data)
         {
-            var now = DateTime.Now;
-            now = now.AddTicks(-(now.Ticks % TimeSpan.TicksPerSecond)); //remove ms and s from time
+            var now = DateTime.UtcNow;
+            now = now.AddTicks(-(now.Ticks % TimeSpan.TicksPerMinute)); //remove ms and s from time
 
             var room = repo.Rooms.First(x => x.Name == data.RoomName);
             if (room == null) {
-                logger.Log(LogLevel.Information, $"Received data for Room {data.RoomName} which does not exist!");
-                return;
+                room = new Room {
+                    Name = data.RoomName
+                };
+
+                repo.Rooms.Add(room);
+                repo.Save();
             }
         
             if (data.Temperature.HasValue) {
-                repo.TemperatureLevels.Add(new Temperature 
+                repo.Datapoints.Add(new DataPoint 
                 { 
+                    Id = now,
+                    Type = DataPointType.Temperature,
                     RoomId = room.Id,
                     Value = data.Temperature.Value
                 });
             }
             
             if (data.Co2.HasValue) {
-                repo.Co2Levels.Add(new Co2 
+                repo.Datapoints.Add(new DataPoint 
                 { 
+                    Id = now,
+                    Type = DataPointType.Co2,
                     RoomId = room.Id,
                     Value = data.Co2.Value
                 });
             }
 
             if (data.Humidity.HasValue) {
-                repo.HumidityLevels.Add(new Humidity 
+                repo.Datapoints.Add(new DataPoint 
                 { 
+                    Id = now,
+                    Type = DataPointType.Humidity,
                     RoomId = room.Id,
                     Value = data.Humidity.Value
                 });
             }
 
              if (data.Battery.HasValue) {
-                repo.BatteryLevels.Add(new Battery
+                repo.Datapoints.Add(new DataPoint
                 { 
+                    Id = now,
+                    Type = DataPointType.Battery,
                     RoomId = room.Id,
                     Value = data.Battery.Value
                 });
