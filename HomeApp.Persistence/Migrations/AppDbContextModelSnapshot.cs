@@ -25,7 +25,7 @@ namespace HomeApp.Persistence.Migrations
             modelBuilder.Entity("HomeApp.Library.Entities.DataPoint", b =>
                 {
                     b.Property<DateTime>("Id")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("RoomId")
                         .HasColumnType("text");
@@ -40,7 +40,7 @@ namespace HomeApp.Persistence.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("DataPoint");
+                    b.ToTable("DataPoints");
                 });
 
             modelBuilder.Entity("HomeApp.Library.Entities.Room", b =>

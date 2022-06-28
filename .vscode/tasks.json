@@ -89,6 +89,19 @@
             "type": "shell",
             "problemMatcher": []
         },
+        {
+            "label": "migration db drop",
+            "windows": {
+                "command": [
+                    "cd HomeApp.Persistence;",
+                    "$Env:${config:db_connection_string.key}='${config:db_connection_string.value}';",
+                    "dotnet ef --startup-project '../HomeApp.Server/'  database drop;",
+                    "cd ..;"
+                ]
+            },
+            "type": "shell",
+            "problemMatcher": []
+        },
 
 
         // DOCKER TASKS

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HomeApp.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220627121339_init")]
+    [Migration("20220628192254_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,7 @@ namespace HomeApp.Persistence.Migrations
             modelBuilder.Entity("HomeApp.Library.Entities.DataPoint", b =>
                 {
                     b.Property<DateTime>("Id")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("RoomId")
                         .HasColumnType("text");
@@ -42,7 +42,7 @@ namespace HomeApp.Persistence.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("DataPoint");
+                    b.ToTable("DataPoints");
                 });
 
             modelBuilder.Entity("HomeApp.Library.Entities.Room", b =>

@@ -20,7 +20,7 @@ namespace HomeApp.Persistence
 
         public void DeleteRange(DateTime from, DateTime to, string? roomId = null, DataPointType? type = null)
         {
-            elems.RemoveAll(x => x.Timestamp >= from && x.Timestamp <= to 
+            elems.RemoveAll(x => x.Id >= from && x.Id <= to 
                     && (!type.HasValue || type == x.Type) 
                     && (roomId != null || roomId == x.RoomId));
         }
@@ -28,7 +28,7 @@ namespace HomeApp.Persistence
         public List<DataPoint> Get(Expression<Func<DataPoint, bool>> filter = null)
         {
             return elems
-                .OrderBy(x => x.Timestamp)
+                .OrderBy(x => x.Id)
                 .Where(filter.Compile())
                 .ToList();
         }
@@ -36,8 +36,8 @@ namespace HomeApp.Persistence
         public List<DataPoint> GetRange(DateTime from, DateTime to, string? roomId = null, DataPointType? type = null)
         {
             return elems
-                .OrderBy(x => x.Timestamp)
-                .Where(x => x.Timestamp >= from && x.Timestamp <= to 
+                .OrderBy(x => x.Id)
+                .Where(x => x.Id >= from && x.Id <= to 
                     && (!type.HasValue || type == x.Type) 
                     && (roomId != null || roomId == x.RoomId))
                 .ToList();
@@ -45,10 +45,12 @@ namespace HomeApp.Persistence
 
         public List<DataPoint> GetRangeFromLast(TimeSpan span, string? roomId = null, DataPointType? type = null) 
         {
-            var latest = elems.OrderByDescending(x => x.Timestamp).First().Timestamp;
+            var elem = elems.OrderByDescending(x => x.Id).FirstOrDefault();
+            if (elem == null) return new List<DataPoint>();
 
+            var latest = elem.Timestamp;
             return elems
-                .OrderBy(x => x.Timestamp)
+                .OrderBy(x => x.Id)
                 .Where(x => x.Timestamp >= latest.Add(-span) && x.Timestamp <= latest 
                     && (!type.HasValue || type == x.Type) 
                     && (roomId != null || roomId == x.RoomId))

@@ -110,7 +110,7 @@ void loop() {
   //   Serial.println("no data availble");
   // }
 
-  delay(5000);
+  delay(1 * 60 * 1000);
 }
 
 

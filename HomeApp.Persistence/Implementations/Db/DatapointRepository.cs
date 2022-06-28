@@ -22,8 +22,8 @@ namespace HomeApp.Persistence
         {
             return context
                 .Set<DataPoint>()
-                .OrderBy(x => x.Timestamp)
-                .Where(x => x.Timestamp >= from && x.Timestamp <= to 
+                .OrderBy(x => x.Id)
+                .Where(x => x.Id >= from && x.Id <= to 
                     && (!type.HasValue || type == x.Type) 
                     && (roomId != null || roomId == x.RoomId))
                 .ToList();
@@ -31,12 +31,14 @@ namespace HomeApp.Persistence
 
         public List<DataPoint> GetRangeFromLast(TimeSpan span, string? roomId = null, DataPointType? type = null) 
         {
-            var latest = context.Set<DataPoint>().OrderByDescending(x => x.Timestamp).First().Timestamp;
+            var elem = context.Set<DataPoint>().OrderByDescending(x => x.Id).FirstOrDefault();
+            if (elem == null) return new List<DataPoint>();
 
+            var latest = elem.Timestamp;
             return context
                 .Set<DataPoint>()
-                .OrderBy(x => x.Timestamp)
-                .Where(x => x.Timestamp >= latest.Add(-span) && x.Timestamp <= latest 
+                .OrderBy(x => x.Id)
+                .Where(x => x.Id >= latest.Add(-span) && x.Id <= latest 
                     && (!type.HasValue || type == x.Type) 
                     && (roomId != null || roomId == x.RoomId))
                 .ToList();

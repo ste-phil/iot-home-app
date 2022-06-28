@@ -22,19 +22,19 @@ namespace HomeApp.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DataPoint",
+                name: "DataPoints",
                 columns: table => new
                 {
-                    Id = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Id = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     RoomId = table.Column<string>(type: "text", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     Value = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DataPoint", x => new { x.Id, x.RoomId, x.Type });
+                    table.PrimaryKey("PK_DataPoints", x => new { x.Id, x.RoomId, x.Type });
                     table.ForeignKey(
-                        name: "FK_DataPoint_Rooms_RoomId",
+                        name: "FK_DataPoints_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
@@ -42,15 +42,15 @@ namespace HomeApp.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DataPoint_RoomId",
-                table: "DataPoint",
+                name: "IX_DataPoints_RoomId",
+                table: "DataPoints",
                 column: "RoomId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DataPoint");
+                name: "DataPoints");
 
             migrationBuilder.DropTable(
                 name: "Rooms");
