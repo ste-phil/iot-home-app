@@ -25,7 +25,7 @@ namespace HomeApp.Persistence
                 .OrderBy(x => x.Id)
                 .Where(x => x.Id >= from && x.Id <= to 
                     && (!type.HasValue || type == x.Type) 
-                    && (roomId != null || roomId == x.RoomId))
+                    && (roomId == null || roomId == x.RoomId))
                 .ToList();
         }
 
@@ -34,13 +34,13 @@ namespace HomeApp.Persistence
             var elem = context.Set<DataPoint>().OrderByDescending(x => x.Id).FirstOrDefault();
             if (elem == null) return new List<DataPoint>();
 
-            var latest = elem.Timestamp;
+            var latest = elem.Id;
             return context
                 .Set<DataPoint>()
                 .OrderBy(x => x.Id)
                 .Where(x => x.Id >= latest.Add(-span) && x.Id <= latest 
                     && (!type.HasValue || type == x.Type) 
-                    && (roomId != null || roomId == x.RoomId))
+                    && (roomId == null || roomId == x.RoomId))
                 .ToList();
         }
 

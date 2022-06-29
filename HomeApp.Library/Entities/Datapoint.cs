@@ -20,7 +20,7 @@ namespace HomeApp.Library.Entities
         public float Value { get; set; }
 
         [NotMapped]
-        public DateTime Timestamp => Id;
+        public DateTime LocalTimestamp => TimeZoneInfo.ConvertTimeFromUtc(Id, TimeZoneInfo.Local);
     }
 
     public class DataPointDto

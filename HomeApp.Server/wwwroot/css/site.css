@@ -11,6 +11,19 @@ nav {
     border-bottom: 1px solid rgba(115, 130, 140, 0.2);
 }
 
+
+@media only screen and (min-width: 992px) {
+  body > main {
+    --block-spacing-vertical: calc(var(--spacing) * 1) !important;
+  }
+} 
+
+
+.icon {
+  width: 32px;
+  height: 32px;
+}
+
 /* Deep-purple Light scheme (Default) */
 /* Can be forced with data-theme="light" */
 [data-theme="light"],
@@ -47,4 +60,6 @@ nav {
   --form-element-focus-color: var(--primary-focus);
   --switch-color: var(--primary-inverse);
   --switch-checked-background-color: var(--primary);
+
+  
 }

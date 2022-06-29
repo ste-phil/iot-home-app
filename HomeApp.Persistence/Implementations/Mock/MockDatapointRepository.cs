@@ -22,7 +22,7 @@ namespace HomeApp.Persistence
         {
             elems.RemoveAll(x => x.Id >= from && x.Id <= to 
                     && (!type.HasValue || type == x.Type) 
-                    && (roomId != null || roomId == x.RoomId));
+                    && (roomId == null || roomId == x.RoomId));
         }
 
         public List<DataPoint> Get(Expression<Func<DataPoint, bool>> filter = null)
@@ -39,7 +39,7 @@ namespace HomeApp.Persistence
                 .OrderBy(x => x.Id)
                 .Where(x => x.Id >= from && x.Id <= to 
                     && (!type.HasValue || type == x.Type) 
-                    && (roomId != null || roomId == x.RoomId))
+                    && (roomId == null || roomId == x.RoomId))
                 .ToList();
         }
 
@@ -48,12 +48,12 @@ namespace HomeApp.Persistence
             var elem = elems.OrderByDescending(x => x.Id).FirstOrDefault();
             if (elem == null) return new List<DataPoint>();
 
-            var latest = elem.Timestamp;
+            var latest = elem.Id;
             return elems
                 .OrderBy(x => x.Id)
-                .Where(x => x.Timestamp >= latest.Add(-span) && x.Timestamp <= latest 
+                .Where(x => x.Id >= latest.Add(-span) && x.Id <= latest 
                     && (!type.HasValue || type == x.Type) 
-                    && (roomId != null || roomId == x.RoomId))
+                    && (roomId == null || roomId == x.RoomId))
                 .ToList();
         }
     }

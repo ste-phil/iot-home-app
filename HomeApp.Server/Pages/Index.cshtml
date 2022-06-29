@@ -1,4 +1,6 @@
 ﻿@page
+@using Library.Entities
+
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -10,10 +12,18 @@
     {
         <article>
             <header style="display: flex; flex-direction: row; justify-content: space-between;">
-                <p>@item.Name</p>
-                <a href="#" onclick="OnClickDebug(event, '@item.Id')" type="button" role="button" class="outline secondary" >🪲</a>
+                <strong>@item.Name</strong>
+                @* <a href="#" onclick="OnClickDebug(event, '@item.Id')" type="button" role="button" class="outline secondary" >🪲</a> *@
             </header>
-            <p>🌡️ 10 °C</p>
+            <div style="display: flex; flex-direction: row; justify-content: space-around;">
+                <p><img class="icon" src="~/imgs/temperature.png" />   @Model.GetLatestDatapointOfType(item, DataPointType.Temperature) °C</p>
+                <p><img class="icon" src="~/imgs/humidity.png" />      @Model.GetLatestDatapointOfType(item, DataPointType.Humidity, decimals: 0) %</p>
+                <p><img class="icon" src="~/imgs/battery.png" />       @Model.GetLatestDatapointOfType(item, DataPointType.Battery) %</p>
+            </div>
+            <div style="padding: 32px 128px 32px 128px;">
+                @await Html.PartialAsync("LinearGauge", Model.GetLinearGaugeModel(item, DataPointType.Co2))
+
+            </div>
 
             <canvas class="background-chart" id="@item.Id" data="@Model.GetRoomDataJson(item)"></canvas>
         </article>

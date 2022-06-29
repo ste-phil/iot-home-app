@@ -21,6 +21,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("AppDbContext"));
 });
 builder.Services.AddScoped<IRepositoryService, RepositoryDatabaseService>();
+// builder.Services.AddScoped<IRepositoryService, MockRepositoryService>();
 
 var app = builder.Build();
 

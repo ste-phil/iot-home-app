@@ -1,8 +1,12 @@
 {
     "registry": "ste5phil/homeapp", 
+    // "db_connection_string": {
+    //     "key": "ConnectionStrings__AppDbContext",
+    //     "value": "Host=127.0.0.1;Database=homeapp;Username=postgres;Password=postgres"
+    // },
     "db_connection_string": {
         "key": "ConnectionStrings__AppDbContext",
-        "value": "Host=127.0.0.1;Database=homeapp;Username=postgres;Password=postgres"
+        "value": "Host=192.168.1.10;Database=homeapp;Username=postgres;Password=postgres"
     },
     "files.associations": {
         "cstddef": "cpp"

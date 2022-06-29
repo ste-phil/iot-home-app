@@ -1,0 +1,110 @@
+@using Library.Entities
+@using HomeApp.Server.Pages
+@using System.Text
+
+@model LinearGaugeModel
+
+@if (Model != null) {
+    string MakeGradient() {
+        StringBuilder x = new StringBuilder();
+
+        x.Append("linear-gradient(90deg");
+        foreach (var colorElem in Model.ColorMap) {
+            x.Append($",{colorElem.Value} {Normalize(colorElem.Key, Model.Min, Model.Max) * 100}%");
+        }
+
+        x.Append(")");
+        return x.ToString();
+    }
+
+    float Normalize(float value, float min, float max) {
+        return (value - min) / (max - min);
+    }
+
+    float Map(float value, float min, float max, float toMin, float toMax) {
+        return Normalize(value, min, max) * (toMax - toMin);
+        }
+
+    <div class="linear-gauge">
+        @if (Model.Title != null) {
+            @Model.Title
+        }
+        @if (Model.ImagePath != null) {
+            <img src="~/imgs/@Model.ImagePath" style="width: 40px; margin-right: 10px;"/>
+        }
+        @Model.Min
+        <div class="linear-gauge-center">
+            <div class="linear-gauge-bg-blur"></div>
+            <div class="linear-gauge-bg"></div>
+
+            <div class="linear-gauge-marker">
+                <div style="transform: translateX(@Map(Model.Value, Model.Min, Model.Max, 0, 100)%);">
+                    <div>@Model.Value</div>
+                </div>
+            </div>
+        </div>
+        @Model.Max
+
+        <style>
+        .linear-gauge {
+            height: 10px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .linear-gauge > .linear-gauge-center {
+            height: 100%;
+            margin: 0 8px 0 8px;
+        }
+
+        .linear-gauge > .linear-gauge-center > .linear-gauge-marker  {
+            border-bottom: 0px !important;
+            width: 100%;
+            height: 100%;
+        }
+
+        .linear-gauge > .linear-gauge-center > .linear-gauge-marker > div {
+            width: 100%;
+            height: 100%;
+        }
+
+        .linear-gauge > .linear-gauge-center > .linear-gauge-marker > div > div {
+            transform: translateY(-30%);
+            height: 250%;
+            width: 35px;
+            background: var(--card-background-color);
+            border: 2px solid var(--primary);
+            border-radius: var(--border-radius);
+        }
+
+        .linear-gauge > .linear-gauge-center > .linear-gauge-marker > div > div {
+            font-size: 0.6em;
+            text-align: center;
+        }
+
+        .linear-gauge > .linear-gauge-center {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .linear-gauge  > .linear-gauge-center > .linear-gauge-bg-blur {
+            position: absolute;
+            height: 100%;
+            left: 0; top: 0; right: 0; bottom: 0;
+            border-radius: var(--border-radius);
+            background: @MakeGradient();
+            filter: blur(8px);
+        }
+
+        .linear-gauge  > .linear-gauge-center > .linear-gauge-bg {
+            position: absolute;
+            height: 100%;
+            left: 0; top: 0; right: 0; bottom: 0;
+            border-radius: var(--border-radius);
+            background: @MakeGradient();
+        }
+        </style>
+    </div>
+
+}
