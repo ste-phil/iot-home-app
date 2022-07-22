@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - HomeApp.Server</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HomeApp.Server.styles.css" asp-append-version="true" />
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -17,10 +16,15 @@
         <nav>
             <ul>
                 <li>
-                    <img src="~/favicon.ico" style="height: 48px;"></img>
+                    <img id="menu-btn" src="~/favicon.ico" style="height: 48px;"></img>
                     @* <strong>HomeApp</strong> *@
                 </li>
             </ul>
+
+            <div style="display: flex;">
+                <article>Dashboard</article>
+                <article>Dashboard</article>
+            </div>
             @* <ul>
                 <li><a role="button" asp-area="" asp-page="/Index">Index</a></li>
                 <li><a role="button" asp-area="" asp-page="/Privacy">Privacy</a></li>
@@ -38,10 +42,15 @@
         </div>
     </footer> *@
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/plotly/plotly-2.12.1.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<script>
+    document.getElementById("menu-btn").addEventListener("click", () => {
+        let nav = document.querySelector("nav");
+        let body = document.querySelector("body");
+        nav.classList.toggle("open");
+        body.classList.toggle("disable-scroll");
+    })
+</script>

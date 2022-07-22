@@ -6,6 +6,9 @@
     ViewData["Title"] = "Home page";
 }
 
+@* Use this as an example for own version*@
+@* <script src="https://apps.elfsight.com/p/platform.js" defer></script> *@
+@* <div class="elfsight-app-72adadb6-a566-4985-9bb3-ca7f6030c425"></div> *@
 
 <div>
     @foreach (var item in Model.repo.Rooms.Get())
@@ -16,9 +19,9 @@
                 @* <a href="#" onclick="OnClickDebug(event, '@item.Id')" type="button" role="button" class="outline secondary" >🪲</a> *@
             </header>
             <div style="display: flex; flex-direction: row; justify-content: space-around;">
-                <p><img class="icon" src="~/imgs/temperature.png" />   @Model.GetLatestDatapointOfType(item, DataPointType.Temperature) °C</p>
-                <p><img class="icon" src="~/imgs/humidity.png" />      @Model.GetLatestDatapointOfType(item, DataPointType.Humidity, decimals: 0) %</p>
-                <p><img class="icon" src="~/imgs/battery.png" />       @Model.GetLatestDatapointOfType(item, DataPointType.Battery) %</p>
+                <p><img class="icon" src="~/imgs/temperature.png"/> @Model.GetLatestDatapointOfType(item, DataPointType.Temperature) °C</p>
+                <p><img class="icon" src="~/imgs/humidity.png"/>    @Model.GetLatestDatapointOfType(item, DataPointType.Humidity, decimals: 0) %</p>
+                <p><img class="icon" src="~/imgs/battery.png"/>     @Model.GetLatestDatapointOfType(item, DataPointType.Battery) %</p>
             </div>
             <div style="padding: 32px 128px 32px 128px;">
                 @await Html.PartialAsync("LinearGauge", Model.GetLinearGaugeModel(item, DataPointType.Co2))

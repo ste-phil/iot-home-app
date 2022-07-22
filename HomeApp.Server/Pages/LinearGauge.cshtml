@@ -1,6 +1,7 @@
 @using Library.Entities
 @using HomeApp.Server.Pages
 @using System.Text
+@using System.Globalization
 
 @model LinearGaugeModel
 
@@ -10,11 +11,37 @@
 
         x.Append("linear-gradient(90deg");
         foreach (var colorElem in Model.ColorMap) {
-            x.Append($",{colorElem.Value} {Normalize(colorElem.Key, Model.Min, Model.Max) * 100}%");
+            x.Append($",{colorElem.Value.ToHtmlHex()} {Normalize(colorElem.Key, Model.Min, Model.Max) * 100}%");
         }
 
         x.Append(")");
         return x.ToString();
+    }
+
+    string ColorFromValue(float value) {
+
+        var colors = Model.ColorMap.ToList();
+        var colorsDesc = colors.OrderByDescending(x => x.Key).ToList();
+
+        KeyValuePair<float, Color> upperColorElem = default, lowerColorElem = default;
+        for (int i = 0; i < colors.Count(); i++) {
+            if (colors[i].Key > value) {
+                lowerColorElem = colors[i];
+                break;
+            }
+        }
+
+        for (int i = 0; i < colorsDesc.Count(); i++) {
+            if (colorsDesc[i].Key < value) {
+                upperColorElem = colorsDesc[i];
+                break;
+            }
+        }
+
+        var norm = Normalize(value, lowerColorElem.Key, upperColorElem.Key);
+        var col = Color.Lerp(lowerColorElem.Value, upperColorElem.Value, norm);
+
+        return col.ToHtmlHex();
     }
 
     float Normalize(float value, float min, float max) {
@@ -23,7 +50,11 @@
 
     float Map(float value, float min, float max, float toMin, float toMax) {
         return Normalize(value, min, max) * (toMax - toMin);
-        }
+    }
+
+    string ToString(float f) {
+        return f.ToString("0.0", CultureInfo.InvariantCulture);
+    }
 
     <div class="linear-gauge">
         @if (Model.Title != null) {
@@ -38,8 +69,8 @@
             <div class="linear-gauge-bg"></div>
 
             <div class="linear-gauge-marker">
-                <div style="transform: translateX(@Map(Model.Value, Model.Min, Model.Max, 0, 100)%);">
-                    <div>@Model.Value</div>
+                <div style="transform: translateX(@ToString(Map(Model.Value, Model.Min, Model.Max, 0, 100))%);">
+                    <div style="border-color: @ColorFromValue(Model.Value)">@Model.Value</div>
                 </div>
             </div>
         </div>

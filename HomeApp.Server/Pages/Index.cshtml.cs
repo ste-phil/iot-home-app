@@ -13,7 +13,7 @@ public class LinearGaugeModel
     public float Min { get; set; }
     public float Max { get; set; }
     public float Value { get; set; }
-    public Dictionary<float, string> ColorMap { get; set; }
+    public Dictionary<float, Color> ColorMap { get; set; }
 }
 
 
@@ -23,7 +23,7 @@ public class IndexModel : PageModel
     {
         public float Min { get; set; }
         public float Max { get; set; }
-        public Dictionary<float, string> ColorMap { get; set; }
+        public Dictionary<float, Color> ColorMap { get; set; }
     }
 
     
@@ -37,12 +37,12 @@ public class IndexModel : PageModel
             { 
                 Min = 0, 
                 Max = 5000, 
-                ColorMap = new Dictionary<float, string> 
+                ColorMap = new Dictionary<float, Color> 
                 { 
-                    { 400.0f,  "#00bdae" },
-                    { 1000.0f, "#feae73" },
-                    { 2000.0f, "#d64e52" },
-                    { 5000.0f, "#2b383e" },
+                    { 400.0f,  "00bdae" },
+                    { 1000.0f, "feae73" },
+                    { 2000.0f, "d64e52" },
+                    { 5000.0f, "2b383e" },
                 } 
             } 
         },
@@ -56,7 +56,8 @@ public class IndexModel : PageModel
 
     public LinearGaugeModel? GetLinearGaugeModel(Room r, DataPointType type) {
         var latest = repo.Datapoints
-            .Get(x => x.RoomId == r.Id && x.Type == type)
+            .Get(x => x.RoomId == r.Id && x.Type == type && x.Value != 0)
+            .OrderByDescending(x => x.Id)
             .FirstOrDefault();
         if (latest != null) 
         {
